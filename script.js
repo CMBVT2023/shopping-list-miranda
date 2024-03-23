@@ -94,6 +94,29 @@ function clearItems() {
     checkUI();
 };
 
+function filterItems (e) {
+    // Initializes a variable with a value of all items in the list
+    const items = itemList.querySelectorAll('li');
+
+    // Initializes a variable with a value of the text in the filter textbox
+    const text = e.target.value.toLowerCase();
+
+    // Runs a loop to iterate through all items in the item list
+    items.forEach(item => {
+        // Initializes a variable and set it equal to the text of the item from the list
+        const itemName = item.firstChild.textContent.toLowerCase();
+
+        // Checks if the text from the item in the list contains the text in the filter textbox
+        if (itemName.indexOf(text) != -1) {
+            // If so, the item is displayed
+            item.style.display = 'flex';
+        } else {
+            // If not, the item is hidden
+            item.style.display = 'none';
+        }
+    });
+};
+
 // Function to check the state of certain UI features
 function checkUI () {
     // Initializes a variable with a value of all items in the list
@@ -115,6 +138,10 @@ function checkUI () {
 itemForm.addEventListener('submit', addItem);
 itemList.addEventListener('click', removeItem);
 clearBtn.addEventListener('click', clearItems);
+itemFilter.addEventListener('input', filterItems);
 
 // Runs the checkUI function upon loading the webpage
 checkUI();
+
+
+// Left off on Local Storage Crash Course
