@@ -1,6 +1,7 @@
 const itemForm = document.getElementById('item-form');
 const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
+const clearBtn = document.getElementById('clear');
 
 // Function to create a new icon and set custom classes
 function createIcon(classes) {
@@ -12,7 +13,7 @@ function createIcon(classes) {
 
     // Return the new icon element
     return icon;
-}
+};
 
 // Function to create a new button and set custom classes
 function createButton(classes) {
@@ -28,7 +29,7 @@ function createButton(classes) {
     
     // Returns the new button element
     return button;
-}
+};
 
 // Function to add a new item to the itemList
 function addItem (e) {
@@ -57,7 +58,27 @@ function addItem (e) {
 
     // Sets itemInput to empty string
     itemInput.value = '';
-} 
+};
+
+// Function to remove items from the list
+function removeItem(e) {
+    // Checks if element being hit contains the correct class
+    if (e.target.parentElement.classList.contains('remove-item')) {
+        //Removes the parent of the button's parent element, or the whole list item
+        e.target.parentElement.parentElement.remove();
+    }
+};
+
+// Function to clear all items from the list
+function clearItems() {
+    // Iterates through the whole list so long as it has a child element
+    while (itemList.firstChild) {
+        // Removes the child element of the item list
+        itemList.removeChild(itemList.firstChild);
+    };
+};
 
 // Event Listeners
 itemForm.addEventListener('submit', addItem);
+itemList.addEventListener('click', removeItem);
+clearBtn.addEventListener('click', clearItems);
