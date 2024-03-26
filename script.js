@@ -16,7 +16,7 @@ function displayItems() {
 
     // Runs checkUI function
     checkUI();
-}
+};
 
 // Function to create a new icon and set custom classes
 function createIcon(classes) {
@@ -58,6 +58,24 @@ function onAddItemSubmit (e) {
     if (newItem === '') {
         alert('Please add an item.');
         return;
+    };
+
+    // Check for edit mode
+    if (isEditMode) {
+        // If edit mode is enabled, Initialize a variable and sets it to the item being edited
+        const itemToEdit = itemList.querySelector('.edit-mode');
+
+        // Removes the item being edited from local storage
+        removeItemFromStorage(itemToEdit.textContent);
+
+        // Removed the edit-mode class from the item being edited
+        itemToEdit.classList.remove('edit-mode');
+
+        // Removed the item being edited from the DOM
+        itemToEdit.remove();
+
+        // Sets edit mode to false
+        isEditMode = false;
     };
 
     // Creates Item Dom element from a function
@@ -152,7 +170,7 @@ function removeItem(item) {
 
         // Removes item from localStorage
         removeItemFromStorage(item.textContent);
-    }
+    };
 
     // Runs checkUI Function
     checkUI();
@@ -168,7 +186,7 @@ function removeItemFromStorage(item) {
 
     // Re-set to localStorage
     localStorage.setItem('items', JSON.stringify(itemsFromStorage)); 
-}
+};
 
 // Function to clear all items from the list
 function clearItems() {
@@ -179,7 +197,7 @@ function clearItems() {
             // Removes the child element of the item list
             itemList.removeChild(itemList.firstChild);
         };
-    }
+    };
 
     // Clear from localStorage
     localStorage.removeItem('items');
@@ -207,12 +225,15 @@ function filterItems (e) {
         } else {
             // If not, the item is hidden
             item.style.display = 'none';
-        }
+        };
     });
 };
 
 // Function to check the state of certain UI features
 function checkUI () {
+    // Clears the contents of the form's textbox
+    itemInput.value = '';
+
     // Initializes a variable with a value of all items in the list
     const items = itemList.querySelectorAll('li');
 
@@ -225,7 +246,16 @@ function checkUI () {
         // Makes the clear button and item filter visible if the list is populated
         clearBtn.style.display = 'block';
         itemFilter.style.display = 'block';
-    }
+    };
+
+    // Sets the form button to original text
+    formBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Item';
+
+    // Sets the form button to original background color
+    formBtn.style.backgroundColor = '#333';
+
+    // Sets edit mode to false
+    isEditMode = false;
 };
 
 // Initialize app
