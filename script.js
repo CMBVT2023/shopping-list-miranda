@@ -33,7 +33,7 @@ function createButton(classes) {
 };
 
 // Function to add a new item to the itemList
-function addItem (e) {
+function onAddItemSubmit (e) {
     // Prevents the form from submitting
     e.preventDefault();
     
@@ -46,16 +46,11 @@ function addItem (e) {
         return;
     };
 
-    // Create list item
-    const li = document.createElement('li');
-    li.appendChild(document.createTextNode(newItem));
+    // Creates Item Dom element from a function
+    addItemToDom(newItem);
 
-    // Create Button and appends it to the new item
-    const button = createButton('remove-item btn-link text-red')
-    li.appendChild(button);
-
-    // Append new item to item list
-    itemList.appendChild(li);
+    // Adds item to local storage
+    addItemToStorage(newItem);
 
     // Runs checkUI Function
     checkUI();
@@ -63,6 +58,39 @@ function addItem (e) {
     // Sets itemInput to empty string
     itemInput.value = '';
 };
+
+function addItemToDom(item) {
+    // Create list item
+    const li = document.createElement('li');
+    li.appendChild(document.createTextNode(item));
+
+    // Create Button and appends it to the new item
+    const button = createButton('remove-item btn-link text-red')
+    li.appendChild(button);
+
+    // Append new item to item list
+    itemList.appendChild(li);
+}
+
+function addItemToStorage(item) {
+    // Initialize variable to store all items saved in local storage
+    let itemsFromStorage;
+
+    // Check if there are any items in local storage
+    if (localStorage.getItem('items') === null) {
+        // If not, set the variable to an empty array
+        itemsFromStorage = [];
+    } else {
+        // If so, parse the local storage to an array before declaring the variable equal to it
+        itemsFromStorage = JSON.parse(localStorage.getItem('items'));
+    }
+
+    // Append the new item to the array 
+    itemsFromStorage.push(item);
+    
+    // Convert to JSON string and set to local storage
+    localStorage.setItem('items', JSON.stringify(itemsFromStorage));
+}
 
 // Function to remove items from the list
 function removeItem(e) {
@@ -82,7 +110,7 @@ function removeItem(e) {
 // Function to clear all items from the list
 function clearItems() {
     // Prompts the user to confirm the list deletion
-    if (confirm('Warning: All item will be deleted.')) {
+    if (confirm('Warning: All items will be deleted.')) {
         // Iterates through the whole list so long as it has a child element
         while (itemList.firstChild) {
             // Removes the child element of the item list
@@ -135,7 +163,7 @@ function checkUI () {
 };
 
 // Event Listeners
-itemForm.addEventListener('submit', addItem);
+itemForm.addEventListener('submit', onAddItemSubmit);
 itemList.addEventListener('click', removeItem);
 clearBtn.addEventListener('click', clearItems);
 itemFilter.addEventListener('input', filterItems);
@@ -143,5 +171,3 @@ itemFilter.addEventListener('input', filterItems);
 // Runs the checkUI function upon loading the webpage
 checkUI();
 
-
-// Left off on Local Storage Crash Course
