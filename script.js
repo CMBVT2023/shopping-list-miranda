@@ -3,6 +3,8 @@ const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
 const clearBtn = document.getElementById('clear');
 const itemFilter = document.getElementById('filter');
+const formBtn = itemForm.querySelector('button');
+let isEditMode = false;
 
 // Function to display items from localStorage
 function displayItems() {
@@ -85,7 +87,7 @@ function getItemsFromStorage() {
     };
 
     return itemsFromStorage;
-}
+};
 
 function addItemToDom(item) {
     // Create list item
@@ -98,7 +100,7 @@ function addItemToDom(item) {
 
     // Append new item to item list
     itemList.appendChild(li);
-}
+};
 
 function addItemToStorage(item) {
     const itemsFromStorage = getItemsFromStorage();
@@ -108,16 +110,39 @@ function addItemToStorage(item) {
     
     // Convert to JSON string and set to local storage
     localStorage.setItem('items', JSON.stringify(itemsFromStorage));
-}
+};
 
-// Function to check an item was interacted with
+// Function to check if an item was clicked
 function onClickItem(e) {
     // Check if the element clicked was the remove button
     if (e.target.parentElement.classList.contains('remove-item')) {
         // If so, call the function to remove the item from the list
         removeItem(e.target.parentElement.parentElement);
+    } else {
+        setItemToEdit(e.target);
     }
-}
+};
+
+// Function to enable item editing mode
+function setItemToEdit(item) {
+    // Set the global item edit mode variable to true
+    isEditMode = true;
+
+    // Iterates through all items in the list and removes edit-mode class
+    itemList.querySelectorAll('li').forEach(i => i.classList.remove('edit-mode'));
+
+    // Appends edit-mode class to item being edited
+    item.classList.add('edit-mode');
+
+    // Changes the form button's text
+    formBtn.innerHTML = '<i class="fa-solid fa-pen"></i> Update Item'
+
+    // Changes the form button's background color
+    formBtn.style.backgroundColor = '#228B22';
+
+    // Sets the input textbox's contents to the item being edited
+    itemInput.value = item.textContent;
+};
 
 // Function to remove items from the list
 function removeItem(item) {
