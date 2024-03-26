@@ -60,6 +60,13 @@ function onAddItemSubmit (e) {
         return;
     };
 
+    // Checks if new item already exists in the list
+    if (checkIfItemExists(newItem)) {
+        // Creates an alert for the user
+        alert('That item already exists!')
+        return;
+    };
+
     // Check for edit mode
     if (isEditMode) {
         // If edit mode is enabled, Initialize a variable and sets it to the item being edited
@@ -139,6 +146,16 @@ function onClickItem(e) {
     } else {
         setItemToEdit(e.target);
     }
+};
+
+// Function to check if new item already exists in the list
+function checkIfItemExists(item) {
+    // Initializes a variable and sets it equal to the item list
+    const itemsFromStorage = getItemsFromStorage();
+
+    // Returns a boolean based on if the item is already in the list,
+        // true if it is, false if it is not
+    return itemsFromStorage.includes(item);
 };
 
 // Function to enable item editing mode
