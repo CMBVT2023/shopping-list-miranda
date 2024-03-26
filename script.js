@@ -110,31 +110,54 @@ function addItemToStorage(item) {
     localStorage.setItem('items', JSON.stringify(itemsFromStorage));
 }
 
-// Function to remove items from the list
-function removeItem(e) {
-    // Prompts the user to confirm the list deletion
+// Function to check an item was interacted with
+function onClickItem(e) {
+    // Check if the element clicked was the remove button
     if (e.target.parentElement.classList.contains('remove-item')) {
-        // Checks if element being hit contains the correct class
-        if (confirm('Are you sure?')) {
-            //Removes the parent of the button's parent element, or the whole list item
-            e.target.parentElement.parentElement.remove();
-        }
+        // If so, call the function to remove the item from the list
+        removeItem(e.target.parentElement.parentElement);
+    }
+}
+
+// Function to remove items from the list
+function removeItem(item) {
+    if (confirm('Are you sure?')) {
+        // Removes item from DOM
+        item.remove();
+
+        // Removes item from localStorage
+        removeItemFromStorage(item.textContent);
     }
 
     // Runs checkUI Function
     checkUI();
 };
 
+// Function to remove item from localStorage
+function removeItemFromStorage(item) {
+    // Initializes a variable with the items in local storage
+    let itemsFromStorage = getItemsFromStorage();
+
+    // Filter out item to be removed
+    itemsFromStorage = itemsFromStorage.filter((i) => i !== item);
+
+    // Re-set to localStorage
+    localStorage.setItem('items', JSON.stringify(itemsFromStorage)); 
+}
+
 // Function to clear all items from the list
 function clearItems() {
     // Prompts the user to confirm the list deletion
     if (confirm('Warning: All items will be deleted.')) {
-        // Iterates through the whole list so long as it has a child element
+        // If confirmed, Iterates through the whole list so long as it has a child element
         while (itemList.firstChild) {
             // Removes the child element of the item list
             itemList.removeChild(itemList.firstChild);
         };
     }
+
+    // Clear from localStorage
+    localStorage.removeItem('items');
 
     // Runs checkUI Function
     checkUI();
@@ -184,7 +207,7 @@ function checkUI () {
 function init() {
     // Event Listeners
     itemForm.addEventListener('submit', onAddItemSubmit);
-    itemList.addEventListener('click', removeItem);
+    itemList.addEventListener('click', onClickItem);
     clearBtn.addEventListener('click', clearItems);
     itemFilter.addEventListener('input', filterItems);
     document.addEventListener('DOMContentLoaded', displayItems);
