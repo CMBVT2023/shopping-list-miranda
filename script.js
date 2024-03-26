@@ -4,6 +4,18 @@ const itemList = document.getElementById('item-list');
 const clearBtn = document.getElementById('clear');
 const itemFilter = document.getElementById('filter');
 
+// Function to display items from localStorage
+function displayItems() {
+    // Initialize a variable and set it equal to the items in local storage via a function
+    const itemsFromStorage = getItemsFromStorage();
+
+    // Iterates through each item in localStorage and adds them to the dom using a function
+    itemsFromStorage.forEach(item => addItemToDom(item));
+
+    // Runs checkUI function
+    checkUI();
+}
+
 // Function to create a new icon and set custom classes
 function createIcon(classes) {
     // Create a new icon element
@@ -59,6 +71,22 @@ function onAddItemSubmit (e) {
     itemInput.value = '';
 };
 
+function getItemsFromStorage() {
+    // Initialize variable to store all items saved in local storage
+    let itemsFromStorage;
+
+    // Check if there are any items in local storage
+    if (localStorage.getItem('items') === null) {
+        // If not, set the variable to an empty array
+        itemsFromStorage = [];
+    } else {
+        // If so, parse the local storage to an array before declaring the variable equal to it
+        itemsFromStorage = JSON.parse(localStorage.getItem('items'));
+    };
+
+    return itemsFromStorage;
+}
+
 function addItemToDom(item) {
     // Create list item
     const li = document.createElement('li');
@@ -73,17 +101,7 @@ function addItemToDom(item) {
 }
 
 function addItemToStorage(item) {
-    // Initialize variable to store all items saved in local storage
-    let itemsFromStorage;
-
-    // Check if there are any items in local storage
-    if (localStorage.getItem('items') === null) {
-        // If not, set the variable to an empty array
-        itemsFromStorage = [];
-    } else {
-        // If so, parse the local storage to an array before declaring the variable equal to it
-        itemsFromStorage = JSON.parse(localStorage.getItem('items'));
-    }
+    const itemsFromStorage = getItemsFromStorage();
 
     // Append the new item to the array 
     itemsFromStorage.push(item);
@@ -162,12 +180,18 @@ function checkUI () {
     }
 };
 
-// Event Listeners
-itemForm.addEventListener('submit', onAddItemSubmit);
-itemList.addEventListener('click', removeItem);
-clearBtn.addEventListener('click', clearItems);
-itemFilter.addEventListener('input', filterItems);
+// Initialize app
+function init() {
+    // Event Listeners
+    itemForm.addEventListener('submit', onAddItemSubmit);
+    itemList.addEventListener('click', removeItem);
+    clearBtn.addEventListener('click', clearItems);
+    itemFilter.addEventListener('input', filterItems);
+    document.addEventListener('DOMContentLoaded', displayItems);
 
-// Runs the checkUI function upon loading the webpage
-checkUI();
+    // Runs the checkUI function upon loading the webpage
+    checkUI();
+}
+
+init();
 
